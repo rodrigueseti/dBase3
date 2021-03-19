@@ -1,0 +1,21 @@
+create victor.dbf
+yCODIGO
+N20
+0
+NOME
+C20
+0
+FONE
+C10
+0
+
+y100
+Jose da Silva
+3223-2222
+y130
+Ana Maria
+2222-3333
+y120
+Joao da Silva
+99706-5566
+n

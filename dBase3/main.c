@@ -129,10 +129,7 @@ int main()
 			
 			//LIST FOR
 			case 23 : {
-				//FUNCOES
-				/*printf("\n%s", comando_field);
-				printf("\n%s", valor);
-				getch()	;*/
+				listFor(arquivo_aberto, comando_field, valor);
 				break;
 			}
 			default :

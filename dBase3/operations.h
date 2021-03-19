@@ -2,17 +2,17 @@
 
 int indexOf(char str[], char subs[])
 {
-	unsigned short int flag = 0;
-	char auxStr[30];
-	char auxSubs[30];
+	int flag = 0;
+	char auxStr[50];
+	char auxSubs[50];
 	
 	strcpy(auxStr, str);
 	strcpy(auxSubs, subs);
 	
-	int pos = -1;
-	int i = 0;
 	int x;
 	int y;
+	int i = 0;
+	int pos = -1;
 	
 	if (str[0] == '\0' || subs[0] == '\0' || strlen(subs) > strlen(str))
 		return -1;
@@ -139,7 +139,7 @@ void createNewField (Arq *open_file, char name[], char type, int width, int dec)
 	
 	newField->pAtual = NULL;
 	strcpy(newField->fieldName, name);
-	newField->type = type;
+	newField->type = toupper(type);
 	newField->width = width;
 	newField->dec = dec;
 	newField->p_dados = NULL;
