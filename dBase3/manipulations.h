@@ -250,10 +250,9 @@ void list (Arq *arq) { //Ok
 		//printf("\n");
 	}
 }
-int x = 0;
+
 void copy_value(char str[], Campos *field)
 {
-	
 	switch(field->type)
 	{
 		case 'N' : {
@@ -272,10 +271,6 @@ void copy_value(char str[], Campos *field)
 		}
 		case 'C' : {
 			strcpy(str, field->pAtual->valor.valorC);
-			
-			x++;
-			if(x == 1)
-				printf("[%s]\n\n", str);
 			break;
 		}
 		case 'M' : {

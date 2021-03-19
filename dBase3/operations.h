@@ -1,25 +1,25 @@
 //TAD Manipulacoes
-
 int indexOf(char str[], char subs[])
 {
 	int flag = 0;
 	char auxStr[50];
 	char auxSubs[50];
 	
-	strcpy(auxStr, str);
-	strcpy(auxSubs, subs);
+	strcpy(auxStr, str); 
+	strcpy(auxSubs, subs); 
 	
 	int x;
-	int y;
+	int y = 0;
 	int i = 0;
 	int pos = -1;
 	
 	if (str[0] == '\0' || subs[0] == '\0' || strlen(subs) > strlen(str))
 		return -1;
+		
 	
 	while (str[i] != '\0' && !flag)
 	{
-		if(subs[0] == str[i])
+		if(str[i] == subs[0])
 		{
 			flag = 1;
 			x = i; 
@@ -36,6 +36,7 @@ int indexOf(char str[], char subs[])
 		pos++;
 		i++;
 	}
+	
 	if(auxSubs[y] == '\0' && flag == 1)
 		return pos;
 	return -1;

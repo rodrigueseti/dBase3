@@ -1,4 +1,4 @@
-create victor.dbf
+create produto.dbf
 yCODIGO
 N20
 0
