@@ -404,11 +404,19 @@ void listFor (Arq *arq, char field[], char valor[])
 	}
 }
 
-void DeleteALL(Status *s) {
-	if(s != NULL){
-		DeleteALL(s->prox);
+void DeleteAll(Status *s) 
+{
+	if(s != NULL) {
+		DeleteAll(s->prox);
 		s->status = 0;
 	}
 }
 
+void RecallAll(Status *s)
+{
+	if(s != NULL) {
+		RecallAll(s->prox);
+		s->status = 1;
+	}
+}
 

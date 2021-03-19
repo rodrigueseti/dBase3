@@ -72,15 +72,22 @@ int main()
 				break;
 			}
 			
+			//DELETE ALL
 			case 13 : {
-				DeleteALL(arquivo_aberto->stts);
+				DeleteAll(arquivo_aberto->stts);
 				printf("All deleted recordings\n");
+				break;
+			}
+			
+			//RECALL ALL
+			case 14 : {
+				RecallAll(arquivo_aberto->stts);
+				printf("all records retrieved\n");
 				break;
 			}
 			
 			//LIST STRUCTURE
 			case 16 : {
-				
 				listarFields(arquivo_aberto, unid);
 				break;
 			}

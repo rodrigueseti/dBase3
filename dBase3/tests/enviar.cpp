@@ -102,13 +102,7 @@ void locate(Arq *arquivo_aberto, char comando_field[], char valor[]){
 		}
 	}	
 }
-Status *DeleteALL(Status *s){
-	if(s != NULL){
-		DeleteALL(s->prox);
-		s->status = 0;
-	}
-	return s;
-}
+
 Status *ReacallAll(Status *s){
 	if(s != NULL){
 		ReacallAll(s->prox);
