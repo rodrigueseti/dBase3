@@ -50,7 +50,7 @@ int SeparaComando(char digitado[], const char comando[], char res[])
 	}
 	aux[pos] = '\0';
 	
-	if(stricmp(aux, comando)==0){
+	if(stricmp(aux, comando) == 0){
 		int i=0;
 		while(digitado[pos] != '\0'){
 			res[i] = digitado[pos];

@@ -403,3 +403,12 @@ void listFor (Arq *arq, char field[], char valor[])
 		}
 	}
 }
+
+void DeleteALL(Status *s) {
+	if(s != NULL){
+		DeleteALL(s->prox);
+		s->status = 0;
+	}
+}
+
+

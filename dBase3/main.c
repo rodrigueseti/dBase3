@@ -10,7 +10,6 @@
 #include "operations.h"
 #include "manipulations.h"
 
-
 /*struct pointers {
 	
 	//unidade aberta
@@ -70,6 +69,12 @@ int main()
 			//APPEND
 			case 11 : { //*******************T*******************estar
 				append(arquivo_aberto);
+				break;
+			}
+			
+			case 13 : {
+				DeleteALL(arquivo_aberto->stts);
+				printf("All deleted recordings\n");
 				break;
 			}
 			
