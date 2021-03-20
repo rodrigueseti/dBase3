@@ -282,7 +282,7 @@ void copy_value(char str[], Campos *field)
 
 void listFor (Arq *arq, char field[], char valor[])
 {
-	if(arq != NULL && arq->stts != NULL && getRegSize(arq->stts))
+	if(arq != NULL && arq->stts != NULL && (/*SET DELETED off/on*/ 0 || getRegSize(arq->stts)))
 	{
 		//POSICIONA PONTEIROS
 		int i = 1;
@@ -420,3 +420,7 @@ void RecallAll(Status *s)
 	}
 }
 
+int locate_for(Arq *arq)
+{
+	if(arq != NULL && arq->stts != NULL && getRegSize(arq->stts))
+}

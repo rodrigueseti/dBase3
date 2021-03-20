@@ -20,7 +20,7 @@
 
 int main()
 {
-	system("title dBase III - Estruturas de Dados II - Fipp - By @github.com/taveira @rafa");
+	system("title dBase III - Estruturas de Dados II - Fipp - By: @rodrigueseti @rafael8paulo - github.com/rodrigueseti/dBase3");
 	
 	Dir *unid;
 	Arq *arquivo_aberto = NULL;
@@ -82,7 +82,7 @@ int main()
 			//RECALL ALL
 			case 14 : {
 				RecallAll(arquivo_aberto->stts);
-				printf("all records retrieved\n");
+				printf("All records retrieved\n");
 				break;
 			}
 			
@@ -142,6 +142,13 @@ int main()
 			//LIST FOR
 			case 23 : {
 				listFor(arquivo_aberto, comando_field, valor);
+				break;
+			}
+			
+			//LOCATE FOR
+			case 24 : {
+				printf("\n[%s]", comando_field);
+				printf("\n[%s]\n", valor);
 				break;
 			}
 			default :
