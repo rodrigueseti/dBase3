@@ -147,8 +147,7 @@ int main()
 			
 			//LOCATE FOR
 			case 24 : {
-				printf("\n[%s]", comando_field);
-				printf("\n[%s]\n", valor);
+				locate(arquivo_aberto, comando_field, valor);
 				break;
 			}
 			default :
