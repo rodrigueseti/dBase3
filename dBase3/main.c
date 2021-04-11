@@ -32,14 +32,17 @@ int main()
 	buildUnit(&unid); //Build Unit E:
 		
 	int opc;
+	//int posY = 5;
 	char comando_field[50];
 	char valor[50];
 	valor[0] = '\0';
 	
-	//show();
 	
-	printf("Diretorio atual: [%c:]\n", unid->letter);
-	printf(". ");
+	molduraPrincipal();
+	//sprintf(valor, "Diretorio atual: [%c:]xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxzzzzzzzzzzzzzz", unid->letter);
+	sprintf(valor, "Diretorio atual: [%c:]", unid->letter);
+	leftFooterMsg(valor); //printf("Diretorio atual: [%c:]\n", unid->letter);
+	gotoxy(2, posY++); printf(". ");
 	fflush(stdin);
 	gets(comando_field);
 	opc = Compara_String(comando_field, valor);
@@ -53,7 +56,17 @@ int main()
 				listaArquivo(unid);
 				break;
 			}
+			//EDIT
+			case 4 : {
+				edit(arquivo_aberto);
+				break;
+			}
 			
+			//PACK
+			case 5 : {
+				pack(arquivo_aberto);
+				break;
+			}
 			
 			//LIST
 			case 7 : {
@@ -66,9 +79,25 @@ int main()
 				system("cls");
 				break;
 			}
+			//RECALL
+			case 9 : {
+				recall(arquivo_aberto);
+				break;
+			}
+			//DELETE
+			case 10 : {
+				Delete(arquivo_aberto);
+				break;
+			}
 			//APPEND
 			case 11 : { //*******************T*******************estar
 				append(arquivo_aberto);
+				break;
+			}
+			
+			//DISPLAY
+			case 12 : {
+				display(arquivo_aberto);
 				break;
 			}
 			
@@ -96,25 +125,37 @@ int main()
 			case 19 : {
 				
 				novoArquivo(unid, valor);
-				printf("Incluir Fields ? (Y/N): ");
+				rightFooterMsg("Incluir Fields ? (Y/N)");
+				gotoxy(2, posY++); printf(". ");
 				opc = toupper(getche());
+				clearFooterMsg();
 				
 				if(opc == 'Y')
 				{
 					arquivo_aberto = abrirArquivo(unid, valor);
 					insertFields(arquivo_aberto);
 					
-					printf("Input data records now? (Y/N)");
-					opc = toupper(getch());
+					molduraPrincipal();
+					sprintf(valor, "Diretorio atual: [%c:]", unid->letter);
+					leftFooterMsg(valor);
+					
+					rightFooterMsg("Input data records now? (Y/N)");
+					posY = 5;
+					gotoxy(2, posY++); printf(". ");
+					opc = toupper(getche());
+					clearFooterMsg();
+					
 					while(opc == 'Y')
 					{
 						//Chamada
 						append(arquivo_aberto);
-						printf("Continue including? (Y/N)");
+						rightFooterMsg("Continue including? (Y/N)");
+						//gotoxy(2, posY++); printf(". ");
 						opc = toupper(getch());
+						clearFooterMsg();
+						clearInserts();
 					}
 				}
-				printf("\n");
 				break;
 			}
 			
@@ -131,11 +172,18 @@ int main()
 				break;
 			}
 			
+			//GOTO
+			case 21 : {
+				Goto(arquivo_aberto, atoi(valor));
+				break;
+			}
+			
 			//SET DEFAULT TO
 			case 22 : {
 				arquivo_aberto = NULL;
 				trocaUnidade(&unid, toupper(valor[0]));
-				printf("Diretorio atual: [%c:]\n", unid->letter);
+				sprintf(valor, "Diretorio atual: [%c:]", unid->letter);
+				leftFooterMsg(valor);
 				break;
 			}
 			
@@ -145,16 +193,23 @@ int main()
 				break;
 			}
 			
-			//LOCATE FOR
+			//LOCATE FOR 
 			case 24 : {
-				locate(arquivo_aberto, comando_field, valor);
+				printf("\n%s", comando_field);
+				printf("\n%s", valor);
+				printf("Record = %d", locate_for(arquivo_aberto, comando_field, valor));
+				break;
+			}
+			
+			//SET DELETED
+			case 25 : {
+				set_delete(valor);
 				break;
 			}
 			default :
-				printf("Comando Invalido\n");
+				rightFooterPopUpMsg("Comando Invalido");
 		}
-		
-		printf(". ");
+		gotoxy(2, posY++); printf(". ");
 		fflush(stdin);
 		gets(comando_field);
 		opc = Compara_String(comando_field, valor);

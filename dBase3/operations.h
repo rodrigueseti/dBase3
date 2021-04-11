@@ -204,7 +204,7 @@ void createNewCell (Campos *open_field, char info[])
 		}
 		case 'L' :
 		case 'l' : {
-			reg->valor.valorL = info[0];
+			reg->valor.valorL = atoi(info);/*info[0];*/
 			break;
 		}
 		case 'C' :

@@ -1,9 +1,14 @@
-/*struct posicoes
+struct posicoes
 {
-	unsigned int y;
+	Status *sttAtual;
 };
 typedef struct posicoes Posicoes;
-*/
+
+Posicoes posis;
+
+short int setdel_onoff = 0;
+
+
 struct field
 {
 	char nome[50];
@@ -52,7 +57,7 @@ void listaArquivo (Dir *unid)
 	Arq *aux = unid->arqs;
 	while(aux != NULL)
 	{
-		printf("%s\n", aux->nomeDBF);
+		gotoxy(posX, posY++); printf("%s", aux->nomeDBF);
 		aux = aux->prox;
 	}
 }
@@ -123,24 +128,25 @@ void append (Arq *arq)
 		Campos *aux = arq->cmps;
 		char info[50];
 		
+		posY = 5;
 		if(aux != NULL) //Exibicao das Fields
 		{
-			system("cls");
+			
+			//system("cls");
 			while(aux != NULL)
 			{
-				printf("%s\n", aux->fieldName);
+				gotoxy(2, posY++); printf("%s", aux->fieldName);
 				aux = aux->prox;
 			}
 			aux = arq->cmps;
 			createNewStatus(arq);
 		}
 		
-		int i = 1;
+		//int i = 1;
+		posY = 5;
 		while(aux != NULL)
 		{
-			gotoxy(17, i++);
-			fflush(stdin);
-			gets(info);
+			gotoxy(17, posY++); fflush(stdin); gets(info);
 			createNewCell(aux, info);
 			aux = aux->prox;
 		}
@@ -159,10 +165,39 @@ int getRegSize(Status *stts)
 	}
 	return i;
 }
+void showFieldType(Campos *auxCmps)
+{
+	switch(auxCmps->type)
+	{
+		case 'N' : {
+			printf("%.2f\t", auxCmps->pAtual->valor.valorN);
+			break;
+		}
+		
+		case 'L' : {
+			printf("%c\t", auxCmps->pAtual->valor.valorL);
+			break;
+		}
+		
+		case 'D' : {
+			printf("%s\t", auxCmps->pAtual->valor.valorD);
+			break;
+		}
+		case 'C' : {
+			printf("%s\t", auxCmps->pAtual->valor.valorC);
+			break;
+		}
+		case 'M' : {
+			printf("%s\t", auxCmps->pAtual->valor.valorM);
+			break;
+		}
+	}
+}
 
+/*
 void list (Arq *arq) { //Ok
 	
-	if(arq != NULL && arq->stts != NULL && getRegSize(arq->stts)) //Ok
+	if(arq != NULL && arq->stts != NULL &&  (setdel_onoff || getRegSize(arq->stts)))  //Ok
 	{
 		int i = 1;
 		Status *posStts = arq->stts;
@@ -170,10 +205,10 @@ void list (Arq *arq) { //Ok
 		unsigned char flag; //Inutil
 		
 		
-		printf("Record#			");
+		printf("Record#\t");
 		while (auxCmps != NULL)
 		{
-			printf("%s			", auxCmps->fieldName); 
+			printf("%s\t", auxCmps->fieldName); 
 			auxCmps = auxCmps->prox;
 		}
 		printf("\n");
@@ -184,36 +219,38 @@ void list (Arq *arq) { //Ok
 			flag = 1; //Inutil
 			while(auxCmps != NULL)
 			{
-				if(/*SET DELETED off/on*/ 0 || posStts->status)
+				if(setdel_onoff || posStts->status)
 				{
 					if(flag) //Inutil
 					{
-						printf("%d			", i++);
+						printf("%d\t", i++);
 						flag = 0;
 					}
 					
+					
+					//showFieldType(auxCmps);
 					switch(auxCmps->type)
 					{
 						case 'N' : {
-							printf("%.2f			", auxCmps->pAtual->valor.valorN);
+							printf("%.2f\t", auxCmps->pAtual->valor.valorN);
 							break;
 						}
 						
 						case 'L' : {
-							printf("%c			", auxCmps->pAtual->valor.valorL);
+							printf("%c\t", auxCmps->pAtual->valor.valorL);
 							break;
 						}
 						
 						case 'D' : {
-							printf("%s			", auxCmps->pAtual->valor.valorD);
+							printf("%s\t", auxCmps->pAtual->valor.valorD);
 							break;
 						}
 						case 'C' : {
-							printf("%s			", auxCmps->pAtual->valor.valorC);
+							printf("%s\t", auxCmps->pAtual->valor.valorC);
 							break;
 						}
 						case 'M' : {
-							printf("%s		", auxCmps->pAtual->valor.valorM);
+							printf("%s\t", auxCmps->pAtual->valor.valorM);
 							break;
 						}
 					}
@@ -225,30 +262,90 @@ void list (Arq *arq) { //Ok
 			posStts = posStts->prox;
 			auxCmps = arq->cmps;
 		}
-		//Retornar pAtual posStts para primeira posicao valida (nao marcada para exclusao).
-		
-		/*struct pointers {
-			//unidade aberta
-			//arquivo aberto
-			//registro atual
-		};*/
-		
+
 		posStts = arq->stts;
 		while(auxCmps != NULL)
 		{
 			auxCmps->pAtual = auxCmps->p_dados;
-			while(posStts != NULL  && posStts->status == 0)
-			{
-				auxCmps->pAtual = auxCmps->pAtual->prox;
-				posStts = posStts->prox;
-			}
 			auxCmps = auxCmps->prox;
-			if(auxCmps == NULL)
-				posStts = arq->stts;
 		}
 		auxCmps = arq->cmps;
-		//printf("\n");
 	}
+}
+*/
+void list (Arq *arq) { //Ok
+	
+	system("cls");
+	//DesenhaBorda();
+	
+	int i = 0, x = 15, y = 3, u = 3;
+	Status *posStts = arq->stts;
+	Campos *auxCmps = arq->cmps;
+	pDados *auxP;
+	
+	gotoxy(u, 2); printf("Record#			");
+	u = u + 15;
+	while (auxCmps != NULL)
+	{
+		gotoxy(u, 2);printf("%s			", auxCmps->fieldName); 
+		auxCmps = auxCmps->prox;
+		u = u + 15;
+	}
+	
+	auxCmps = arq->cmps;
+	while(auxCmps != NULL){
+		auxP = auxCmps->p_dados;
+		posStts = arq->stts;
+		while(auxP != NULL)	{
+			if(setdel_onoff || posStts->status){
+				switch(auxCmps->type)
+				{
+					case 'N' : {
+						gotoxy(x, y++); printf("%.2f			", auxP->valor.valorN);
+						break;
+					}
+					
+					case 'L' : {
+						gotoxy(x, y++); printf("%c			", auxP->valor.valorL);
+						break;
+					}
+					
+					case 'D' : {
+						gotoxy(x, y++); printf("%s			", auxP->valor.valorD);
+						break;
+					}
+					case 'C' : {
+						gotoxy(x, y++); printf("%s			", auxP->valor.valorC);
+						break;
+					}
+					case 'M' : {
+						gotoxy(x, y++); printf("%s		", auxP->valor.valorM);
+						break;
+					}
+				}
+			}
+			auxP = auxP->prox;
+			posStts = posStts->prox;
+		}
+		y = 3;
+		x = x + 15;
+		auxCmps = auxCmps->prox;
+	}
+
+	auxP =  arq->cmps->p_dados;
+	posStts = arq->stts;
+	y = 3;
+	while(posStts != NULL){
+		if(setdel_onoff || posStts->status)
+		{
+			gotoxy(5, y++); printf(" %d ", i+1);
+		}
+		i++;
+		posStts = posStts->prox;
+	}
+	gotoxy(25, 21); printf("press any key to continue");
+	getch();
+	
 }
 
 void copy_value(char str[], Campos *field)
@@ -280,9 +377,58 @@ void copy_value(char str[], Campos *field)
 	}
 }
 
-void listFor (Arq *arq, char field[], char valor[])
+/*
+pDados *busca_dado(Campos *campo, char valor[])
 {
-	if(arq != NULL && arq->stts != NULL && (/*SET DELETED off/on*/ 0 || getRegSize(arq->stts)))
+	
+}
+*/
+
+int compara_dado(Campos *campo, pDados *reg, char valor[])
+{
+	if((toupper(campo->type) == 'N' || toupper(campo->type) == 'L') && (reg->valor.valorN == valor[0] || reg->valor.valorL == valor[0]))
+	    return 1;
+	
+	if(toupper(campo->type) == 'C' && !stricmp(reg->valor.valorC, valor))
+	    return 1;
+	
+	if(toupper(campo->type) == 'D' && !stricmp(reg->valor.valorD, valor))
+	    return 1;
+	    
+	if(toupper(campo->type) == 'M' && !stricmp(reg->valor.valorM, valor))
+	    return 1;
+	
+	return 0;
+}
+
+Campos *busca_campo(Arq *arq, char valor[])
+{
+	Campos *auxCmps = arq->cmps;
+	while(auxCmps != NULL && stricmp(auxCmps->fieldName, valor))
+		auxCmps = auxCmps->prox;
+		
+	return auxCmps;
+}
+
+void exibeFields(Arq *arq)
+{
+	Campos *auxCmps = arq->cmps;
+	
+	if(auxCmps != NULL)
+	{
+		printf("Record#		");
+		while (auxCmps != NULL)
+		{
+			printf("%s\t", auxCmps->fieldName);
+			auxCmps = auxCmps->prox;
+		}
+		printf("\n");
+	}
+}
+
+void listFor (Arq *arq, char field[], char valor[]) //Testar junto com display goto e edit
+{
+	if(arq != NULL && arq->stts != NULL && (setdel_onoff || getRegSize(arq->stts)))
 	{
 		//POSICIONA PONTEIROS
 		int i = 1;
@@ -295,20 +441,12 @@ void listFor (Arq *arq, char field[], char valor[])
 		
 		
 		//Já verificando se Field exisite
-		while (!flag && auxCmps != NULL)
+		fieldEncontrada = busca_campo(arq, field);
+		//Já verificando se Field existe
+		
+		//printf("%s", valor);
+		if(fieldEncontrada != NULL)
 		{
-			if(!stricmp(auxCmps->fieldName, field))
-				flag = 1;
-			else
-				auxCmps = auxCmps->prox;
-		}
-		//Já verificando se Field exisite
-				
-		if(flag)
-		{
-			fieldEncontrada = auxCmps; //Atribuindo a field encontrada
-			auxCmps = arq->cmps;
-			
 			//posicionando pAtual no primeiro registro
 			while(auxCmps != NULL)
 			{
@@ -319,14 +457,7 @@ void listFor (Arq *arq, char field[], char valor[])
 			//posicionando pAtual no primeiro registro
 			
 			//Exibe linha de Fields
-			printf("Record#		");
-			while (auxCmps != NULL)
-			{
-				printf("%s		", auxCmps->fieldName);
-				auxCmps = auxCmps->prox;
-			}
-			printf("\n");
-			auxCmps = arq->cmps;
+			exibeFields(arq);
 			//Exibe linha de Fields
 			
 			while(posStts != NULL)
@@ -336,39 +467,15 @@ void listFor (Arq *arq, char field[], char valor[])
 				
 				while(auxCmps != NULL)
 				{
-					if((/*SET DELETED off/on*/ 0 || posStts->status) && indexOf(str, valor) != -1)
+					if((setdel_onoff || posStts->status) && indexOf(str, valor) != -1)
 					{
 						if(flag)
 						{
-							printf("%d		", i++);
+							printf("%d\t", i++);
 							flag = 0;
 						}
 						
-						switch(auxCmps->type)
-						{
-							case 'N' : {
-								printf("%.2f		", auxCmps->pAtual->valor.valorN);
-								break;
-							}
-							
-							case 'L' : {
-								printf("%c		", auxCmps->pAtual->valor.valorL);
-								break;
-							}
-							
-							case 'D' : {
-								printf("%s		", auxCmps->pAtual->valor.valorD);
-								break;
-							}
-							case 'C' : {
-								printf("%s		", auxCmps->pAtual->valor.valorC);
-								break;
-							}
-							case 'M' : {
-								printf("%s		", auxCmps->pAtual->valor.valorM);
-								break;
-							}
-						}
+						showFieldType(auxCmps);
 					}
 					auxCmps->pAtual = auxCmps->pAtual->prox;
 					auxCmps = auxCmps->prox;
@@ -390,138 +497,328 @@ void listFor (Arq *arq, char field[], char valor[])
 			while(auxCmps != NULL)
 			{
 				auxCmps->pAtual = auxCmps->p_dados;
-				while(posStts != NULL  && posStts->status == 0)
-				{
-					auxCmps->pAtual = auxCmps->pAtual->prox;
-					posStts = posStts->prox;
-				}
 				auxCmps = auxCmps->prox;
-				if(auxCmps != NULL)
-					posStts = arq->stts;
 			}
 			auxCmps = arq->cmps;
 		}
 	}
 }
 
-void DeleteAll(Status *s) 
+void DeleteAll(Status *s) //Atribuir nulo ao pAtual pois pAtual nao pode continuar apontando para um registro marcado para exclusao
 {
-	if(s != NULL) {
+	if(s != NULL) 
+	{
 		DeleteAll(s->prox);
 		s->status = 0;
 	}
 }
 
-void RecallAll(Status *s)
+void RecallAll(Status *s)  
 {
-	if(s != NULL) {
+	if(s != NULL) 
+	{
 		RecallAll(s->prox);
 		s->status = 1;
 	}
 }
 
-Campos *Busca_Campos(Campos *Inicio, char valor[]){
+
+void set_delete(char valor[])
+{
+	if(!stricmp("on", valor))
+	{
+		setdel_onoff = 0;
+		printf("set deleted 0\n");
+	}
+	else if(!stricmp("off", valor))
+	{
+		setdel_onoff = 1;
+		printf("set deleted 1\n");
+	}
+	else printf("Comando Invalido\n");
+}
+
+int locate_for(Arq *arq, char field[], char valor[])
+{
+	Campos *campo_encontrado = busca_campo(arq, field);
 	
-	while(Inicio != NULL && stricmp(Inicio->fieldName, valor)!=0)
-		Inicio = Inicio->prox;
+	if(campo_encontrado != NULL)
+	{
+		pDados *aux;
+	    Status *auxStts;
+		short int flag = 1;
+		int pos = 0;
+		aux = campo_encontrado->p_dados;
+		auxStts = arq->stts;
 		
-	return Inicio;
-}
-void Busca_ValorC(pDados *Inicio, char valor[], Status *s){
-	
-	int i=0;
-	
-	while(Inicio != NULL){
-		if(stricmp(Inicio->valor.valorC, valor)==0 && s->status == 1){
-			printf("\nRecord = %d", i+1);
+		while(aux != NULL && flag)
+		{
+			if((auxStts->status || setdel_onoff) && compara_dado(campo_encontrado, aux, valor))
+				flag = 0;
+			else
+			{
+				aux = aux->prox;
+				auxStts = auxStts->prox;
+			}
+			pos++;
 		}
-		Inicio =  Inicio->prox;
-		s = s->prox;
-		i++;
+		if(aux != NULL)
+		    return pos;
 	}
-	if(i == 0)
-		printf("\nElemento nao encontrado!");
+	return -1;
 }
-void Busca_ValorN(pDados *Inicio, char v[], Status *s){
-	int i=0, valor = atof(v);
-	
-	while(Inicio != NULL){
-		if(Inicio->valor.valorN == valor && s->status == 1){
-			printf("\nRecord = %d", i+1);
+
+
+void Goto (Arq *arq, int numReg)
+{
+	if(arq != NULL && numReg > 0 && arq->stts != NULL)
+	{
+		Status *auxStts = arq->stts;
+		int limit = 1;
+		while(auxStts != NULL && (limit < numReg || setdel_onoff || !auxStts->status))
+		{
+			auxStts = auxStts->prox;
+			limit++;
 		}
-		Inicio =  Inicio->prox;
-		s = s->prox;
-		i++;
-	}
-	if(i == 0)
-		printf("\nElemento nao encontrado!");
-}
-void Busca_ValorD(pDados *Inicio, char valor[], Status *s){
-	int i=0;
-	
-	while(Inicio != NULL){
-		if(stricmp(Inicio->valor.valorD, valor)==0 && s->status){
-			printf("\nRecord = %d", i+1);
-		}
-		Inicio =  Inicio->prox;
-		s = s->prox;
-		i++;
-	}
-	if(i == 0)
-		printf("\nElemento nao encontrado!");
-}
-void Busca_ValorL(pDados *Inicio, char valor[], Status *s){
-	int i=0;
-	
-	while(Inicio != NULL){
-		if(Inicio->valor.valorL == valor[0] && s->status){
-			printf("\nRecord = %d", i+1);
-		}
-		Inicio =  Inicio->prox;
-		s = s->prox;
-		i++;
-	}
-	if(i == 0)
-		printf("\nElemento nao encontrado!");
-}
-void Busca_ValorM(pDados *Inicio, char valor[], Status *s){
-	int i=0;
-	
-	while(Inicio != NULL){
-		if(stricmp(Inicio->valor.valorM, valor)==0 && s->status){
-			printf("\nRecord = %d", i+1);
-		}
-		Inicio =  Inicio->prox;
-		s = s->prox;
-		i++;
-	}
-	if(i == 0)
-		printf("\nElemento nao encontrado!");
-}
-void locate(Arq *arquivo_aberto, char comando_field[], char valor[]){
-	
-	Campos *c = arquivo_aberto->cmps;
-	Campos *aux = Busca_Campos(c, comando_field);
-	int pos;
-	if(aux != NULL){
 		
-		switch(c->type){
-			case 'N':
-				Busca_ValorN(aux->p_dados, valor, arquivo_aberto->stts);
-				break;
-			case 'D':
-				Busca_ValorD(aux->p_dados, valor, arquivo_aberto->stts);
-				break;
-			case 'L':
-				Busca_ValorL(aux->p_dados, valor, arquivo_aberto->stts);
-				break;
-			case 'C':
-				Busca_ValorC(aux->p_dados, valor, arquivo_aberto->stts);
-				break;
-			case 'M':
-				Busca_ValorM(aux->p_dados, valor, arquivo_aberto->stts);
-				break;
+		if(auxStts != NULL)
+		{
+			int i;
+			Campos *auxCmp = arq->cmps;
+			while(auxCmp != NULL)
+			{
+				i = 1;
+				auxCmp->pAtual = auxCmp->p_dados;
+				while(i < limit)
+				{
+					auxCmp->pAtual = auxCmp->pAtual->prox;
+					i++;
+				}
+				auxCmp = auxCmp->prox;
+			}
 		}
-	}	
+	}
 }
+
+void display(Arq *arq)
+{
+	if(arq != NULL && arq->stts != NULL)
+	{
+		int i = 1;
+		pDados *auxReg = arq->cmps->p_dados;
+		Status *auxStts = arq->stts;
+		while(auxReg != NULL && auxReg != arq->cmps->pAtual || (auxStts->status == 0 && setdel_onoff == 0))
+		{
+			if(setdel_onoff || auxStts->status == 1)
+				i++;
+			auxStts = auxStts->prox;
+			auxReg = auxReg->prox;
+		}
+		
+		if(auxStts != NULL)
+		{
+			exibeFields(arq);
+			Campos *auxCmp = arq->cmps;
+			printf("%d\t", i);
+			while(auxCmp != NULL)
+			{
+			    showFieldType(auxCmp);
+			    auxCmp = auxCmp->prox;
+			}
+		}
+	}
+}
+
+
+void edit (Arq *arq)
+{
+	if(arq != NULL && arq->cmps != NULL)
+	{
+		char info[50];
+		Campos *aux = arq->cmps;
+		
+		system("cls");
+		while(aux != NULL)
+		{
+			printf("%s\n", aux->fieldName);
+			aux = aux->prox;
+		}
+		aux = arq->cmps;
+		
+		int i = 1;
+		while(aux != NULL)
+		{
+			gotoxy(17, i++); fflush(stdin); gets(info);
+			
+			switch (aux->type)
+			{
+				case 'N' :
+				case 'n' : {
+					aux->pAtual->valor.valorN = strtof(info, NULL);
+					break;
+				}
+				case 'D' :
+				case 'd' : {
+					strcpy(aux->pAtual->valor.valorD, info);
+					break;
+				}
+				case 'L' :
+				case 'l' : {
+					aux->pAtual->valor.valorL = atoi(info);/*info[0];*/
+					break;
+				}
+				case 'C' :
+				case 'c' : {
+					strcpy(aux->pAtual->valor.valorC, info);
+					break;
+				}
+				case 'M' :
+				case 'm' : {
+					strcpy(aux->pAtual->valor.valorM, info);
+					break;
+				}
+			}
+			aux = aux->prox;
+		}
+	}
+}
+
+void Delete(Arq *arquivo_aberto)
+{
+	if(arquivo_aberto != NULL && arquivo_aberto->stts != NULL)
+	{
+		Status *s = arquivo_aberto->stts;
+		pDados *auxReg = arquivo_aberto->cmps->p_dados;
+		
+		while(s != NULL && auxReg != arquivo_aberto->cmps->pAtual)
+		{
+			auxReg = auxReg->prox;
+			s = s->prox;
+		}
+		if (s != NULL){
+			s->status = 0;
+			//gotoxy(25, 21); printf("%d record deleted", i+1);
+		} else {
+			//gotoxy(25, 21); printf("does not exist");
+		}	
+	}
+}
+
+void recall(Arq *arquivo_aberto)
+{
+	if(arquivo_aberto != NULL && arquivo_aberto->stts != NULL)
+	{
+		Status *s = arquivo_aberto->stts;
+		pDados *auxReg = arquivo_aberto->cmps->p_dados;
+		
+		while(s != NULL && auxReg != arquivo_aberto->cmps->pAtual)
+		{
+			auxReg = auxReg->prox;
+			s = s->prox;
+		}
+		if (s != NULL)
+		{
+			s->status = 1;
+			//gotoxy(25, 21); printf("%d record deleted", i+1);
+		} else {
+			//gotoxy(25, 21); printf("does not exist");
+		}	
+	}
+}
+
+void pack(Arq *arquivo_aberto)
+{
+	
+	Campos *cmp = arquivo_aberto->cmps;
+	
+	//pDados
+	pDados *antP;
+	pDados *p; 
+	pDados *del;
+	
+	//Status
+	Status *s = arquivo_aberto->stts;
+	Status *sttsDel;
+	Status *sttsAnt;
+	
+	int vet[100]; //Converter para pilha ou lista linkada
+	int pos = 0;
+	int TL = 0;
+	int i = 0;
+	int j;
+	
+	while(s != NULL)
+	{
+		if(s->status == 0)
+		{
+			vet[TL] = i;
+			TL++;
+		}	
+		i++;
+		s = s->prox;
+	}
+		
+	//Remover da coluna status
+	s = arquivo_aberto->stts;
+	for(i = 0, j = 0; s != NULL && j < TL; i++)
+	{
+		if(i == vet[j])
+		{
+			if(s == arquivo_aberto->stts)
+			{
+				sttsDel = s;
+				arquivo_aberto->stts = arquivo_aberto->stts->prox;
+				sttsAnt = arquivo_aberto->stts;
+				s = sttsAnt;
+			} 
+			else
+			{
+				sttsAnt->prox = s->prox;
+				sttsDel = s;
+				s = s->prox;
+			}
+			free(sttsDel);
+			j++;
+		}
+		else
+		{
+			sttsAnt = s;
+			s = s->prox;
+		}
+	}
+	//Remover dados
+	while(cmp != NULL)
+	{
+		p = cmp->p_dados;
+		for(i = 0, j = 0; s != NULL && j < TL; i++)
+		{
+			if(i == vet[j])
+			{
+				if(p == arquivo_aberto->cmps->p_dados)
+				{
+					del = p;
+					cmp->p_dados = cmp->p_dados->prox;
+					cmp->pAtual = cmp->p_dados;
+					antP = cmp->p_dados;
+					p = antP;
+				} 
+				else
+				{
+					antP->prox = p->prox;
+					del = p;
+					p = p->prox;
+				}
+				free(del);
+				j++;
+			}
+			else
+			{
+				antP = p;
+				p = p->prox;
+			}
+		}
+		cmp = cmp->prox;
+	}
+}
+
 
