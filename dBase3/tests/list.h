@@ -1,75 +1,76 @@
 void list (Arq *arq) { //Ok
 	
-	if(arq != NULL && arq->stts != NULL &&  (setdel_onoff || getRegSize(arq->stts)))  //Ok
+	if(arq->stts != NULL)
 	{
-		int i = 1;
+		system("cls");
+		//DesenhaBorda();
+		
+		int i = 0, x = 15, y = 3, u = 3;
 		Status *posStts = arq->stts;
 		Campos *auxCmps = arq->cmps;
-		unsigned char flag; //Inutil
+		pDados *auxP;
 		
-		
-		printf("Record#			");
+		gotoxy(u, 2); printf("Record#			");
+		u = u + 15;
 		while (auxCmps != NULL)
 		{
-			printf("%s			", auxCmps->fieldName); 
+			gotoxy(u, 2);printf("%s			", auxCmps->fieldName); 
 			auxCmps = auxCmps->prox;
+			u = u + 15;
 		}
-		printf("\n");
-		auxCmps = arq->cmps;
 		
-		while(posStts != NULL) //ou posStts != NULL
-		{
-			flag = 1; //Inutil
-			while(auxCmps != NULL)
-			{
-				if(setdel_onoff || posStts->status)
-				{
-					if(flag) //Inutil
-					{
-						printf("%d			", i++);
-						flag = 0;
-					}
-					
+		auxCmps = arq->cmps;
+		while(auxCmps != NULL){
+			auxP = auxCmps->p_dados;
+			posStts = arq->stts;
+			while(auxP != NULL)	{
+				if(setdel_onoff || posStts->status){
 					switch(auxCmps->type)
 					{
 						case 'N' : {
-							printf("%.2f			", auxCmps->pAtual->valor.valorN);
+							gotoxy(x, y++); printf("%.2f			", auxP->valor.valorN);
 							break;
 						}
 						
 						case 'L' : {
-							printf("%c			", auxCmps->pAtual->valor.valorL);
+							gotoxy(x, y++); printf("%c			", auxP->valor.valorL);
 							break;
 						}
 						
 						case 'D' : {
-							printf("%s			", auxCmps->pAtual->valor.valorD);
+							gotoxy(x, y++); printf("%s			", auxP->valor.valorD);
 							break;
 						}
 						case 'C' : {
-							printf("%s			", auxCmps->pAtual->valor.valorC);
+							gotoxy(x, y++); printf("%s			", auxP->valor.valorC);
 							break;
 						}
 						case 'M' : {
-							printf("%s		", auxCmps->pAtual->valor.valorM);
+							gotoxy(x, y++); printf("%s		", auxP->valor.valorM);
 							break;
 						}
 					}
 				}
-				auxCmps->pAtual = auxCmps->pAtual->prox;
-				auxCmps = auxCmps->prox;
+				auxP = auxP->prox;
+				posStts = posStts->prox;
 			}
-			printf("\n");
-			posStts = posStts->prox;
-			auxCmps = arq->cmps;
-		}
-
-		posStts = arq->stts;
-		while(auxCmps != NULL)
-		{
-			auxCmps->pAtual = auxCmps->p_dados;
+			y = 3;
+			x = x + 15;
 			auxCmps = auxCmps->prox;
 		}
-		auxCmps = arq->cmps;
+	
+		auxP =  arq->cmps->p_dados;
+		posStts = arq->stts;
+		y = 3;
+		while(posStts != NULL){
+			if(setdel_onoff || posStts->status)
+			{
+				gotoxy(5, y++); printf(" %d ", i+1);
+			}
+			i++;
+			posStts = posStts->prox;
+		}
+		gotoxy(25, 21); printf("press any key to continue");
+		getch();
 	}
 }

@@ -194,158 +194,81 @@ void showFieldType(Campos *auxCmps)
 	}
 }
 
-/*
 void list (Arq *arq) { //Ok
 	
-	if(arq != NULL && arq->stts != NULL &&  (setdel_onoff || getRegSize(arq->stts)))  //Ok
+	if(arq->stts != NULL)
 	{
-		int i = 1;
+		system("cls");
+		//DesenhaBorda();
+		
+		int i = 0, x = 15, y = 3, u = 3;
 		Status *posStts = arq->stts;
 		Campos *auxCmps = arq->cmps;
-		unsigned char flag; //Inutil
+		pDados *auxP;
 		
-		
-		printf("Record#\t");
+		gotoxy(u, 2); printf("Record#			");
+		u = u + 15;
 		while (auxCmps != NULL)
 		{
-			printf("%s\t", auxCmps->fieldName); 
+			gotoxy(u, 2);printf("%s			", auxCmps->fieldName); 
 			auxCmps = auxCmps->prox;
+			u = u + 15;
 		}
-		printf("\n");
-		auxCmps = arq->cmps;
 		
-		while(posStts != NULL) //ou posStts != NULL
-		{
-			flag = 1; //Inutil
-			while(auxCmps != NULL)
-			{
-				if(setdel_onoff || posStts->status)
-				{
-					if(flag) //Inutil
-					{
-						printf("%d\t", i++);
-						flag = 0;
-					}
-					
-					
-					//showFieldType(auxCmps);
+		auxCmps = arq->cmps;
+		while(auxCmps != NULL){
+			auxP = auxCmps->p_dados;
+			posStts = arq->stts;
+			while(auxP != NULL)	{
+				if(setdel_onoff || posStts->status){
 					switch(auxCmps->type)
 					{
 						case 'N' : {
-							printf("%.2f\t", auxCmps->pAtual->valor.valorN);
+							gotoxy(x, y++); printf("%.2f			", auxP->valor.valorN);
 							break;
 						}
 						
 						case 'L' : {
-							printf("%c\t", auxCmps->pAtual->valor.valorL);
+							gotoxy(x, y++); printf("%c			", auxP->valor.valorL);
 							break;
 						}
 						
 						case 'D' : {
-							printf("%s\t", auxCmps->pAtual->valor.valorD);
+							gotoxy(x, y++); printf("%s			", auxP->valor.valorD);
 							break;
 						}
 						case 'C' : {
-							printf("%s\t", auxCmps->pAtual->valor.valorC);
+							gotoxy(x, y++); printf("%s			", auxP->valor.valorC);
 							break;
 						}
 						case 'M' : {
-							printf("%s\t", auxCmps->pAtual->valor.valorM);
+							gotoxy(x, y++); printf("%s		", auxP->valor.valorM);
 							break;
 						}
 					}
 				}
-				auxCmps->pAtual = auxCmps->pAtual->prox;
-				auxCmps = auxCmps->prox;
+				auxP = auxP->prox;
+				posStts = posStts->prox;
 			}
-			printf("\n");
-			posStts = posStts->prox;
-			auxCmps = arq->cmps;
-		}
-
-		posStts = arq->stts;
-		while(auxCmps != NULL)
-		{
-			auxCmps->pAtual = auxCmps->p_dados;
+			y = 3;
+			x = x + 15;
 			auxCmps = auxCmps->prox;
 		}
-		auxCmps = arq->cmps;
-	}
-}
-*/
-void list (Arq *arq) { //Ok
 	
-	system("cls");
-	//DesenhaBorda();
-	
-	int i = 0, x = 15, y = 3, u = 3;
-	Status *posStts = arq->stts;
-	Campos *auxCmps = arq->cmps;
-	pDados *auxP;
-	
-	gotoxy(u, 2); printf("Record#			");
-	u = u + 15;
-	while (auxCmps != NULL)
-	{
-		gotoxy(u, 2);printf("%s			", auxCmps->fieldName); 
-		auxCmps = auxCmps->prox;
-		u = u + 15;
-	}
-	
-	auxCmps = arq->cmps;
-	while(auxCmps != NULL){
-		auxP = auxCmps->p_dados;
+		auxP =  arq->cmps->p_dados;
 		posStts = arq->stts;
-		while(auxP != NULL)	{
-			if(setdel_onoff || posStts->status){
-				switch(auxCmps->type)
-				{
-					case 'N' : {
-						gotoxy(x, y++); printf("%.2f			", auxP->valor.valorN);
-						break;
-					}
-					
-					case 'L' : {
-						gotoxy(x, y++); printf("%c			", auxP->valor.valorL);
-						break;
-					}
-					
-					case 'D' : {
-						gotoxy(x, y++); printf("%s			", auxP->valor.valorD);
-						break;
-					}
-					case 'C' : {
-						gotoxy(x, y++); printf("%s			", auxP->valor.valorC);
-						break;
-					}
-					case 'M' : {
-						gotoxy(x, y++); printf("%s		", auxP->valor.valorM);
-						break;
-					}
-				}
+		y = 3;
+		while(posStts != NULL){
+			if(setdel_onoff || posStts->status)
+			{
+				gotoxy(5, y++); printf(" %d ", i+1);
 			}
-			auxP = auxP->prox;
+			i++;
 			posStts = posStts->prox;
 		}
-		y = 3;
-		x = x + 15;
-		auxCmps = auxCmps->prox;
+		gotoxy(25, 21); printf("press any key to continue");
+		getch();
 	}
-
-	auxP =  arq->cmps->p_dados;
-	posStts = arq->stts;
-	y = 3;
-	while(posStts != NULL){
-		if(setdel_onoff || posStts->status)
-		{
-			gotoxy(5, y++); printf(" %d ", i+1);
-		}
-		i++;
-		posStts = posStts->prox;
-	}
-	gotoxy(25, 21); printf("press any key to continue");
-	getch();
-	
 }
 
 void copy_value(char str[], Campos *field)
@@ -728,7 +651,6 @@ void recall(Arq *arquivo_aberto)
 
 void pack(Arq *arquivo_aberto)
 {
-	
 	Campos *cmp = arquivo_aberto->cmps;
 	
 	//pDados
@@ -757,7 +679,8 @@ void pack(Arq *arquivo_aberto)
 		i++;
 		s = s->prox;
 	}
-		
+	
+	
 	//Remover da coluna status
 	s = arquivo_aberto->stts;
 	for(i = 0, j = 0; s != NULL && j < TL; i++)
@@ -786,7 +709,7 @@ void pack(Arq *arquivo_aberto)
 			s = s->prox;
 		}
 	}
-	//Remover dados
+	//Remover dados.
 	while(cmp != NULL)
 	{
 		p = cmp->p_dados;
@@ -794,6 +717,7 @@ void pack(Arq *arquivo_aberto)
 		{
 			if(i == vet[j])
 			{
+				
 				if(p == arquivo_aberto->cmps->p_dados)
 				{
 					del = p;
@@ -801,7 +725,7 @@ void pack(Arq *arquivo_aberto)
 					cmp->pAtual = cmp->p_dados;
 					antP = cmp->p_dados;
 					p = antP;
-				} 
+				}
 				else
 				{
 					antP->prox = p->prox;
@@ -821,4 +745,39 @@ void pack(Arq *arquivo_aberto)
 	}
 }
 
+void delReg(pDados *auxReg)
+{
+    if(auxReg->prox != NULL)
+        delReg(auxReg->prox);
+    free(auxReg);
+}
+
+
+void delField(Campos *cmp)
+{
+    if(cmp->prox != NULL)
+        delField(cmp->prox);
+    
+    delReg(cmp->pAtual);
+    free(cmp);
+}
+
+void delStatus(Status *stts)
+{
+	if(stts->prox != NULL)
+		delStatus(stts->prox);
+	
+	free(stts);
+}
+
+void zap(Arq *arquivo_aberto)
+{
+    Campos *auxCmps = arquivo_aberto->cmps;
+    Status *auxStts = arquivo_aberto->stts;
+    delField(auxCmps);
+    delStatus(auxStts);
+    
+    arquivo_aberto->cmps = NULL;
+    arquivo_aberto->stts = NULL;
+}
 

@@ -51,11 +51,17 @@ int main()
 	{
 		switch (opc)
 		{
+			case 1 : {
+				zap(arquivo_aberto);
+				break;
+			}
 			//DIR
 			case 2 : {
 				listaArquivo(unid);
 				break;
 			}
+			
+			
 			//EDIT
 			case 4 : {
 				edit(arquivo_aberto);
